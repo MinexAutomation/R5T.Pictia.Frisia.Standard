@@ -4,6 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 using R5T.Dacia;
 using R5T.Frisia.Standard;
+using R5T.Frisia.Suebia;
 
 
 namespace R5T.Pictia.Frisia.Standard
@@ -13,10 +14,11 @@ namespace R5T.Pictia.Frisia.Standard
         /// <summary>
         /// Adds the <see cref="ISftpClientWrapperProvider"/> service.
         /// </summary>>
-        public static IServiceCollection AddSftpClientWrapperProvider(this IServiceCollection services, string hostFriendlyName)
+        public static IServiceCollection AddSftpClientWrapperProvider(this IServiceCollection services,
+            ServiceAction<IAwsEc2ServerHostFriendlyNameProvider> addAwsEc2ServerHostFriendlyNameProvider)
         {
             services.AddFrisiaSftpClientWrapperProvider(
-                services.AddAwsEc2ServerSecretsProviderAction(hostFriendlyName));
+                services.AddAwsEc2ServerSecretsProviderAction(addAwsEc2ServerHostFriendlyNameProvider));
 
             return services;
         }
@@ -24,9 +26,10 @@ namespace R5T.Pictia.Frisia.Standard
         /// <summary>
         /// Adds the <see cref="ISftpClientWrapperProvider"/> service.
         /// </summary>>
-        public static ServiceAction<ISftpClientWrapperProvider> AddSftpClientWrapperProviderAction(this IServiceCollection services, string hostFriendlyName)
+        public static ServiceAction<ISftpClientWrapperProvider> AddSftpClientWrapperProviderAction(this IServiceCollection services,
+            ServiceAction<IAwsEc2ServerHostFriendlyNameProvider> addAwsEc2ServerHostFriendlyNameProvider)
         {
-            var serviceAction = new ServiceAction<ISftpClientWrapperProvider>(() => services.AddSftpClientWrapperProvider(hostFriendlyName));
+            var serviceAction = new ServiceAction<ISftpClientWrapperProvider>(() => services.AddSftpClientWrapperProvider(addAwsEc2ServerHostFriendlyNameProvider));
             return serviceAction;
         }
     }
